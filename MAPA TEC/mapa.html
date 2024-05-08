@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa de la Escuela</title>
+  <style>
+    .mapa {
+      position: relative;
+      width: 100%; 
+      max-width: 800px; 
+      z-index: 1; 
+    }
+    .container {
+      display: flex;
+    }
+    #mapa {
+      position: relative;
+      z-index: 1;
+    }
+
+    .marca-edificio {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #86b7fe;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+      z-index: 3; 
+    }
+
+    .marca-edificio::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      width: 10px;
+      height: 10px;
+      background-color: white;
+      border-radius: 50%;
+    }
+    .marca-edificio:hover {
+      transform: scale(1.2); 
+    }
+
+    #edificio1 {
+      top: 12%;
+      left: 73%;
+    }
+
+    #edificio2 {
+      top: 9%;
+      left: 60%;
+      
+    }
+
+    #edificio3 {
+      top: 23.5%;
+      left: 63.5%;
+      transform: translate(-50%, -50%); 
+    }
+
+    #edificio4 {
+      top: 23.5%;
+      left: 56.5%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio5 {
+      top: 23.9%;
+      left: 49.8%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio6 {
+      top: 25%;
+      left: 43.7%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio7 {
+      top: 20%;
+      left: 35.5%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio8 {
+      top: 28.7%;
+      left: 61.5%;
+;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio9 {
+      top: 28%;
+      left: 53%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio10 {
+      top: 34.3%;
+      left: 48%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio11 {
+      top: 28%;
+      left: 40.8%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio13 {
+      top: 28%;
+      left: 28%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio14 {
+      top: 33.6%;
+      left: 24%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio15 {
+      top: 28%;
+      left: 17%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio16 {
+      top: 36%;
+      left: 64%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio17 {
+      top: 36.5%;
+      left: 54.6%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio18 {
+      top: 38.5%;
+      left: 47.5%;
+      transform: translate(-50%, -50%); 
+    } 
+
+    #edificio19 {
+      top: 41.9%;
+      left: 40.5%;
+      transform: translate(-50%, -50%); 
+    }
+
+    #edificio20 {
+      top: 39.5%;
+      left: 34.3%;
+      transform: translate(-50%, -50%); 
+    }
+
+    #edificio21 {
+      top: 42%;
+      left: 26.3%;
+      transform: translate(-50%, -50%); 
+    }
+
+    #edificio23 {
+      top: 39%;
+      left: 19%;
+      transform: translate(-50%, -50%); 
+    }
+    
+    #edificio24 {
+      top: 41%;
+      left: 70%;
+      transform: translate(-50%, -50%); 
+    }
+
+    #edificio25 {
+      top: 47%;
+      left: 60%;
+      transform: translate(-50%, -50%); 
+    }
+
+    #edificio26 {
+      top: 41%;
+      left: 57%;
+      transform: translate(-50%, -50%); 
+    }
+
+    #edificio27 {
+      top: 45.9%;
+      left: 47.3%;
+      transform: translate(-50%, -50%); 
+    }
+
+    #edificio28 {
+      top:  49.7%;
+      left: 40%;
+      transform: translate(-50%, -50%); 
+    }
+
+    #edificio29 {
+      top: 48%;
+      left: 32.7%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio30 {
+      top: 51%;
+      left: 55.5%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio31 {
+      top: 48.3%;
+      left: 69%;
+      transform: translate(-50%, -50%); 
+    }
+    
+    #edificio33 {
+      top: 55.2%;
+      left: 37%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio34 {
+      top: 53.7%;
+      left: 29.8%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio35 {
+      top: 48%;
+      left: 25%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio37 {
+      top: 60%;
+      left: 55%;
+      transform: translate(-50%, -50%); 
+    }
+    #edificio38 {
+      top: 60%;
+      left: 40%;
+      transform: translate(-50%, -50%); 
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+      z-index: 3; 
+    }
+
+    .tooltip .tooltiptext {
+      font-size: 12px;
+    }
+    .tooltip img {
+      max-width: 80px;
+      height: auto;
+      display: block;
+      margin-top: 5px;
+    }
+    
+   /* Estilos para el menú */
+   .menu {
+      width: 300px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      margin-right: 20px;
+    }
+    
+    .menu h2 {
+      font-size: 18px;
+      color: #333333;
+      margin-bottom: 10px;
+    }
+    
+    .menu select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      font-size: 16px;
+      color: #333333;
+    }
+    
+    .menu select:focus {
+      outline: none;
+      border-color: #86b7fe;
+      box-shadow: 0 0 5px #86b7fe;
+    }
+    
+    .menu option {
+      font-size: 16px;
+    }
+    
+    .menu button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4caf50;
+      color: #ffffff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .menu button:hover {
+      background-color: #45a049;
+    }
+     .ubicacion-actual {
+     background-color: green;
+    }
+
+     .ubicacion-destino {
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu">
+    <h2>Ubicación Actual</h2>
+    <select id="ubicacion-actual">
+      <option value="">Seleccione su ubicación actual</option>
+      <option value="edificio1">Edificio 1</option>
+      <option value="edificio2">Edificio 2</option>
+      <option value="edificio3">Edificio 3</option>
+      <option value="edificio4">Edificio 4</option>
+      <option value="edificio5">Edificio 5</option>
+      <option value="edificio6">Edificio 6</option>
+      <option value="edificio7">Edificio 7</option>
+      <option value="edificio8">Edificio 8</option>
+      <option value="edificio9">Edificio 9</option>
+      <option value="edificio10">Edificio 10</option>
+      <option value="edificio11">Edificio 11</option>
+      <option value="edificio13">Edificio 13</option>
+      <option value="edificio14">Edificio 14</option>
+      <option value="edificio15">Edificio 15</option>
+      <option value="edificio16">Edificio 16</option>
+      <option value="edificio17">Edificio 17</option>
+      <option value="edificio18">Edificio 18</option>
+      <option value="edificio19">Edificio 19</option>
+      <option value="edificio20">Edificio 20</option>
+      <option value="edificio21">Edificio 21</option>
+      <option value="edificio23">Edificio 23</option>
+      <option value="edificio24">Edificio 24</option>
+      <option value="edificio25">Edificio 25</option>
+      <option value="edificio26">Edificio 26</option>
+      <option value="edificio27">Edificio 27</option>
+      <option value="edificio28">Edificio 28</option>
+      <option value="edificio29">Edificio 29</option>
+      <option value="edificio30">Edificio 30</option>
+      <option value="edificio31">Edificio 31</option>
+      <option value="edificio33">Edificio 33</option>
+      <option value="edificio34">Edificio 34</option>
+      <option value="edificio12">Edificio 35</option>
+      <option value="edificio12">Edificio 37</option>
+      <option value="edificio12">Edificio 38</option>
+      
+      
+    </select>
+
+    <h2>Ubicación de Destino</h2>
+    <select id="ubicacion-destino">
+      <option value="">Seleccione su ubicación de destino</option>
+      <option value="edificio1">Edificio 1</option>
+      <option value="edificio2">Edificio 2</option>
+      <option value="edificio3">Edificio 3</option>
+      <option value="edificio4">Edificio 4</option>
+      <option value="edificio5">Edificio 5</option>
+      <option value="edificio6">Edificio 6</option>
+      <option value="edificio7">Edificio 7</option>
+      <option value="edificio8">Edificio 8</option>
+      <option value="edificio9">Edificio 9</option>
+      <option value="edificio10">Edificio 10</option>
+      <option value="edificio11">Edificio 11</option>
+      <option value="edificio13">Edificio 13</option>
+      <option value="edificio14">Edificio 14</option>
+      <option value="edificio15">Edificio 15</option>
+      <option value="edificio16">Edificio 16</option>
+      <option value="edificio17">Edificio 17</option>
+      <option value="edificio18">Edificio 18</option>
+      <option value="edificio19">Edificio 19</option>
+      <option value="edificio20">Edificio 20</option>
+      <option value="edificio21">Edificio 21</option>
+      <option value="edificio23">Edificio 23</option>
+      <option value="edificio24">Edificio 24</option>
+      <option value="edificio25">Edificio 25</option>
+      <option value="edificio26">Edificio 26</option>
+      <option value="edificio27">Edificio 27</option>
+      <option value="edificio28">Edificio 28</option>
+      <option value="edificio29">Edificio 29</option>
+      <option value="edificio30">Edificio 30</option>
+      <option value="edificio31">Edificio 31</option>
+      <option value="edificio33">Edificio 33</option>
+      <option value="edificio34">Edificio 34</option>
+      <option value="edificio12">Edificio 35</option>
+      <option value="edificio12">Edificio 37</option>
+      <option value="edificio12">Edificio 38</option>
+      
+    </select>
+  </div>
+
+  <div class="mapa">
+    <img src="./edificios/MAPA.jpeg" alt="Mapa de la Escuela" id="mapa" style="max-width: 100%; height: auto;">
+    <div class="marca-edificio" id="edificio1">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 1</span>
+        <img src="./edificios/1.jpg" >
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio2">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 2</span>
+        <img src="./edificios/2.1.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio3">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 3</span>
+        <img src="./edificios/3.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio4">
+      <div class="tooltip">
+        <span class="tooltiptext"> Edificio 4</span>
+        
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio5">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 5</span>
+        <img src="./edificios/5.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio6">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 6</span>
+        <img src="./edificios/6.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio7">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 7</span>
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio8">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 8</span>
+        <img src="./edificios/8.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio9">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 9</span>
+        <img src="./edificios/9.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio10">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 10</span>
+        <img src="./edificios/10.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio11">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 11</span>
+        <img src="./edificios/11.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio13">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 13</span>
+        <img src="./edificios/13.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio14">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 14</span>
+        <img src="./edificios/14.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio15">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 15</span>
+        <img src="./edificios/15.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio16">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 16</span>
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio17">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 17</span>
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio18">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 18</span>
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio19">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 19</span>
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio20">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 20</span>
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio21">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 21</span>
+        <img src="./edificios/21.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio23">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 23</span>
+        <img src="./edificios/23.1.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio24">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 24</span>
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio25">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 25</span>
+        <img src="./edificios/25.jpeg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio26">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 26</span>
+        <img src="./edificios/26.jpeg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio27">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 27</span>
+        <img src="./edificios/27.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio28">
+      <div class="tooltip">
+        <span class="tooltiptext"> Edificio 28</span>
+        <img src="./edificios/28.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio29">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 29</span>
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio30">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 30</span>
+        <img src="./edificios/30.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio31">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 31</span>
+        <img src="./edificios/31.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio33">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 33</span>
+        
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio34">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 34</span>
+        <img src="./edificios/34.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio35">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 35</span>
+        
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio37">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 37</span>
+        <img src="./edificios/37.jpg">
+      </div>
+    </div>
+    <div class="marca-edificio" id="edificio38">
+      <div class="tooltip">
+        <span class="tooltiptext">Edificio 38</span>
+        <img src="./edificios/38.jpg">
+      </div>
+    </div>
+  
+  <script>
+    
+    // Obtenemos las referencias de las marcas de edificio
+    const marcasEdificio = document.querySelectorAll('.marca-edificio');
+
+    // Agregamos un evento de cambio a los selectores de ubicación actual y de destino
+    document.getElementById('ubicacion-actual').addEventListener('change', filtrarEdificios);
+    document.getElementById('ubicacion-destino').addEventListener('change', filtrarEdificios);
+
+    // Función para filtrar las marcas de edificio según la selección del usuario
+    function filtrarEdificios() {
+  // Obtenemos los valores seleccionados de ubicación actual y de destino
+  const ubicacionActual = document.getElementById('ubicacion-actual').value;
+  const ubicacionDestino = document.getElementById('ubicacion-destino').value;
+
+  // Iteramos sobre todas las marcas de edificio
+  marcasEdificio.forEach(marca => {
+    // Si la marca de edificio coincide con la ubicación actual, le agregamos la clase 'ubicacion-actual'
+    if (marca.id === ubicacionActual) {
+      marca.classList.add('ubicacion-actual');
+    } else {
+      // De lo contrario, la eliminamos
+      marca.classList.remove('ubicacion-actual');
+    }
+
+    // Si la marca de edificio coincide con la ubicación de destino, le agregamos la clase 'ubicacion-destino'
+    if (marca.id === ubicacionDestino) {
+      marca.classList.add('ubicacion-destino');
+    } else {
+      // De lo contrario, la eliminamos
+      marca.classList.remove('ubicacion-destino');
+    }
+
+    // Si la marca de edificio coincide con la ubicación actual o de destino, la mostramos, de lo contrario la ocultamos
+    if (marca.id === ubicacionActual || marca.id === ubicacionDestino) {
+      marca.style.display = 'block';
+    } else {
+      marca.style.display = 'none';
+      ocultarTooltip(marca);
+    }
+  });
+}
+    
+    const edificio1 = document.getElementById('edificio1');
+    const edificio2 = document.getElementById('edificio2');
+    const edificio3 = document.getElementById('edificio3');
+    const edificio4 = document.getElementById('edificio4');
+    const edificio5 = document.getElementById('edificio5');
+    const edificio6 = document.getElementById('edificio6');
+    const edificio7 = document.getElementById('edificio7');
+    const edificio8 = document.getElementById('edificio8');
+    const edificio9 = document.getElementById('edificio9');
+    const edificio10 = document.getElementById('edificio10');
+    const edificio11 = document.getElementById('edificio11');
+    
+    const edificio13 = document.getElementById('edificio13');
+    const edificio14 = document.getElementById('edificio14');
+    const edificio15 = document.getElementById('edificio15');
+    const edificio16 = document.getElementById('edificio16');
+    const edificio17 = document.getElementById('edificio17');
+    const edificio18 = document.getElementById('edificio18');
+    const edificio19 = document.getElementById('edificio19');
+    const edificio20 = document.getElementById('edificio20');
+    const edificio21 = document.getElementById('edificio21');
+    const edificio23 = document.getElementById('edificio23');
+    const edificio24 = document.getElementById('edificio24');
+    const edificio25 = document.getElementById('edificio25');
+    const edificio26 = document.getElementById('edificio26');
+    const edificio27 = document.getElementById('edificio27');
+    const edificio28 = document.getElementById('edificio28');
+    const edificio29 = document.getElementById('edificio29');
+    const edificio30 = document.getElementById('edificio30');
+    const edificio31 = document.getElementById('edificio31');
+    const edificio33 = document.getElementById('edificio33');
+    const edificio34 = document.getElementById('edificio34');
+    const edificio35 = document.getElementById('edificio35');
+    const edificio37 = document.getElementById('edificio37');
+    const edificio38 = document.getElementById('edificio38');
+
+    edificio1.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio1);
+    });
+    edificio1.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio1);
+    });
+
+    edificio2.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio2);
+    });
+    edificio2.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio2);
+    });
+
+    edificio3.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio3);
+    });
+    edificio3.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio3);
+    });
+
+    edificio4.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio4);
+    });
+    edificio4.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio4);
+    });
+
+    edificio5.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio5);
+    });
+    edificio5.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio5);
+    });
+
+    edificio6.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio6);
+    });
+    edificio6.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio6);
+    });
+
+    edificio7.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio7);
+    });
+    edificio7.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio7);
+    });
+
+    edificio8.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio8);
+    });
+    edificio8.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio8);
+    });
+
+    edificio9.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio9);
+    });
+    edificio9.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio9);
+    });
+
+    edificio10.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio10);
+    });
+    edificio10.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio10);
+    });
+    
+    edificio11.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio11);
+    });
+    edificio11.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio11);
+    });
+
+    edificio13.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio13);
+    });
+    edificio13.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio13);
+    });
+
+    edificio14.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio14);
+    });
+    edificio14.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio14);
+    });
+
+    edificio15.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio15);
+    });
+    edificio15.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio15);
+    });
+    
+    edificio16.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio16);
+    });
+    edificio16.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio16);
+    });
+
+    edificio17.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio17);
+    });
+    edificio17.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio17);
+    });
+    
+    edificio18.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio18);
+    });
+    edificio18.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio18);
+    });
+
+    edificio19.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio19);
+    });
+    edificio19.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio19);
+    });
+
+    edificio20.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio20);
+    });
+    edificio20.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio20);
+    });
+
+    edificio21.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio21);
+    });
+    edificio21.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio21);
+    });
+
+    edificio23.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio23);
+    });
+    edificio23.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio23);
+    });
+
+    edificio24.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio24);
+    });
+    edificio24.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio24);
+    });
+
+    edificio25.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio25);
+    });
+    edificio25.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio25);
+    });
+
+    edificio26.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio26);
+    });
+    edificio26.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio26);
+    });
+
+    edificio27.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio27);
+    });
+    edificio27.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio27);
+    });
+
+    edificio28.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio28);
+    });
+    edificio28.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio28);
+    });
+
+    edificio29.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio29);
+    });
+    edificio29.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio29);
+    });
+
+    edificio30.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio30);
+    });
+    edificio30.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio30);
+    });
+
+    edificio31.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio31);
+    });
+    edificio31.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio31);
+    });
+
+    edificio33.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio33);
+    });
+    edificio33.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio33);
+    });
+
+    edificio34.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio34);
+    });
+    edificio34.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio34);
+    });
+    
+    edificio35.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio35);
+    });
+    edificio35.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio35);
+    });
+
+    edificio37.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio37);
+    });
+    edificio37.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio37);
+    });
+
+    edificio38.addEventListener('mouseover', () => {
+      mostrarTooltip(edificio38);
+    });
+    edificio38.addEventListener('mouseout', () => {
+      ocultarTooltip(edificio38);
+    });
+
+    function mostrarTooltip(elemento) {
+      const tooltip = elemento.querySelector('.tooltip');
+      tooltip.style.display = 'block';
+    }
+
+    function ocultarTooltip(elemento) {
+      const tooltip = elemento.querySelector('.tooltip');
+      tooltip.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
+
+
+
+
